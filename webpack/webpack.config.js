@@ -3,6 +3,7 @@ const path = require("path");
 const postcssImport = require('postcss-import');
 const precss = require("precss");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
 const webpack = require("webpack");
 
 const root = path.resolve(__dirname, "../");
@@ -35,7 +36,8 @@ function plugins(isProduction) {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),
-    new HtmlWebpackPlugin(htmlConfig)
+    new HtmlWebpackPlugin(htmlConfig),
+    new ExtractTextWebpackPlugin("dist/[name]-[contenthash].css")
   ] :
   [
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -45,22 +47,41 @@ function plugins(isProduction) {
   ];
 }
 
+function cssLoader(isProduction) {
+  return (isProduction) ? {
+    test: /\.css$/,
+    loader: ExtractTextWebpackPlugin.extract("style-loader", "css-loader", "postcss-loader")
+  } :
+  {
+    test: /\.css$/,
+    loader: "style!css!postcss"
+  }
+}
+
+function sassLoader(isProduction) {
+  return (isProduction) ?
+  {
+    test: /\.scss$/,
+    loader: ExtractTextWebpackPlugin.extract("style-loader", "css-loader", "postcss-loader", "sass-loader")
+  } :
+  {
+    test: /\.scss$/,
+    loader: "style!css?sourceMap!postcss!sass?sourceMap"
+  }
+}
+
 function output(isProduction) {
   return (isProduction) ?
   {
     path: path.resolve(__dirname, "../dist"),
     publicPath: "/",
-    filename: 'bundle.[hash].js'
+    filename: 'bundle.[chunkhash].js'
   } :
   {
     path: path.resolve(__dirname, "../build"),
     publicPath: "/",
-    filename: 'bundle.[hash].js'
+    filename: 'bundle.js'
   };
-}
-
-function filename(isProduction) {
-    return (isProduction) ? '[name].[chunkhash].js' : '[name].js';
 }
 
 module.exports = {
@@ -86,14 +107,8 @@ module.exports = {
           exclude: /node_modules/,
           loader: "babel"
         },
-        {
-          test: /\.css$/,
-          loader: "style!css"
-        },
-        {
-          test: /\.scss$/,
-          loader: "style!css?sourceMap!sass?sourceMap"
-        },
+        cssLoader(isProduction),
+        sassLoader(isProduction),
         {
           test: /\.(geo)?json$/,
           loader: "json"
