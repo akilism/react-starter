@@ -2,10 +2,20 @@ const autoprefixer = require('autoprefixer');
 const path = require("path");
 const postcssImport = require('postcss-import');
 const precss = require("precss");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 const root = path.resolve(__dirname, "../");
-const webRoot = "/build";
+const isProduction = (process.env.NODE_ENV !== 'development');
+
+const htmlConfig = {
+  title: 'React Starter',
+  filename: 'index.html',
+  template: `${path.resolve(__dirname, "../src/html")}/index.html`,
+  inject: true
+};
+
+console.log(path.resolve(__dirname, "../build"));
 
 function entry(isProduction) {
   return (isProduction) ?
@@ -24,30 +34,42 @@ function plugins(isProduction) {
       }
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin(htmlConfig)
   ] :
   [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin(htmlConfig)
   ];
+}
+
+function output(isProduction) {
+  return (isProduction) ?
+  {
+    path: path.resolve(__dirname, "../dist"),
+    publicPath: "/",
+    filename: 'bundle.[hash].js'
+  } :
+  {
+    path: path.resolve(__dirname, "../build"),
+    publicPath: "/",
+    filename: 'bundle.[hash].js'
+  };
 }
 
 function filename(isProduction) {
     return (isProduction) ? '[name].[chunkhash].js' : '[name].js';
 }
 
-console.log(path.resolve(__dirname, "../build"));
-const isProduction = (process.env.NODE_ENV !== 'development');
 module.exports = {
     devtool: '#source-map',
     entry: {
       app: entry(isProduction)
     },
-    output: {
-      path: path.resolve(__dirname, "../build"),
-      publicPath: webRoot,
-      filename: 'bundle.js'
+    eslint: {
+      formatter: require('eslint-friendly-formatter')
     },
     module: {
       preLoaders: [
@@ -66,11 +88,11 @@ module.exports = {
         },
         {
           test: /\.css$/,
-          loader: "style!css!postcss"
+          loader: "style!css"
         },
         {
           test: /\.scss$/,
-          loader: "style!css!postcss!sass"
+          loader: "style!css?sourceMap!sass?sourceMap"
         },
         {
           test: /\.(geo)?json$/,
@@ -85,6 +107,7 @@ module.exports = {
         }
       ]
     },
+    output: output(isProduction),
     plugins: plugins(isProduction),
     postcss: function() {
       return [

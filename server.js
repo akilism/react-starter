@@ -1,5 +1,6 @@
 import http from "http";
 import express from "express";
+import path from "path";
 
 import webpack from "webpack";
 import webpackDev from "webpack-dev-middleware";
@@ -9,7 +10,10 @@ import webpackConfig from "./webpack/webpack.config.js";
 const compiler = webpack(webpackConfig);
 const app = express();
 
-(function() {
+// Inject webpack dev and hot reload middleware if in development.
+(function(isProduction) {
+  if(isProduction) { return; }
+
   app.use(webpackDev(compiler,
   {
     noInfo: true,
@@ -22,10 +26,13 @@ const app = express();
     path: '/__webpack_hmr',
     heartbeat: 10 * 1000
   }));
-})();
+})((process.env.NODE_ENV !== 'development'));
+
+// Static Assets.
+app.use(express.static(webpackConfig.output.publicPath));
 
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + '/src/html/index.html');
+  res.sendFile(`${__dirname}/${webpackConfig.output.publicPath}/index.html`);
 });
 
 app.get('/test', function (req, res) {
