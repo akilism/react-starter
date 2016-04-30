@@ -1,17 +1,17 @@
-const autoprefixer = require('autoprefixer');
+const autoprefixer = require("autoprefixer");
 const path = require("path");
-const postcssImport = require('postcss-import');
+const postcssImport = require("postcss-import");
 const precss = require("precss");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
 const webpack = require("webpack");
 
 const root = path.resolve(__dirname, "../");
-const isProduction = (process.env.NODE_ENV !== 'development');
+const isProduction = (process.env.NODE_ENV !== "development");
 
 const htmlConfig = {
-  title: 'React Starter',
-  filename: 'index.html',
+  title: "React Starter",
+  filename: "index.html",
   template: `${path.resolve(__dirname, "../src/html")}/index.html`,
   inject: true
 };
@@ -20,9 +20,9 @@ console.log(path.resolve(__dirname, "../build"));
 
 function entry(isProduction) {
   return (isProduction) ?
-    [ './src/js/app.js' ] :
-    [ 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-      './src/js/app.js' ];
+    [ "./src/js/app.js" ] :
+    [ "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",
+      "./src/js/app.js" ];
 }
 
 function plugins(isProduction) {
@@ -75,22 +75,22 @@ function output(isProduction) {
   {
     path: path.resolve(__dirname, "../dist"),
     publicPath: "/",
-    filename: 'bundle.[chunkhash].js'
+    filename: "bundle.[chunkhash].js"
   } :
   {
     path: path.resolve(__dirname, "../build"),
     publicPath: "/",
-    filename: 'bundle.js'
+    filename: "bundle.js"
   };
 }
 
 module.exports = {
-    devtool: '#source-map',
+    devtool: "#source-map",
     entry: {
       app: entry(isProduction)
     },
     eslint: {
-      formatter: require('eslint-friendly-formatter')
+      formatter: require("eslint-friendly-formatter")
     },
     module: {
       preLoaders: [
@@ -115,7 +115,7 @@ module.exports = {
         },
         {
           test: /\.(png|jpe?g|gif|svg|otf|eot|woff2?|ttf)$/,
-          loader: 'url',
+          loader: "file",
           query: {
             name: "[name].[hash].[ext]",
           }
