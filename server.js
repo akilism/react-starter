@@ -29,10 +29,10 @@ const app = express();
 })((process.env.NODE_ENV !== 'development'));
 
 // Static Assets.
-app.use(express.static(webpackConfig.output.publicPath));
+app.use(express.static(webpackConfig.output.path));
 
 app.get("/", function(req, res) {
-  res.sendFile(`${__dirname}/${webpackConfig.output.publicPath}/index.html`);
+  res.sendFile(`${__dirname}/${webpackConfig.output.path}/index.html`);
 });
 
 app.get('/test', function (req, res) {
