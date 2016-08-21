@@ -36,14 +36,14 @@ function plugins(isProduction) {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),
-    new HtmlWebpackPlugin(htmlConfig),
+    // new HtmlWebpackPlugin(htmlConfig),
     new ExtractTextWebpackPlugin("dist/[name]-[contenthash].css")
   ] :
   [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new HtmlWebpackPlugin(htmlConfig)
+    // new HtmlWebpackPlugin(htmlConfig)
   ];
 }
 
