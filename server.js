@@ -1,7 +1,7 @@
 import http from "http";
 import express from "express";
 import expressHandlebars from "express-handlebars";
-// import path from "path";
+import _ from 'mori';
 
 import webpack from "webpack";
 import webpackDev from "webpack-dev-middleware";
@@ -13,6 +13,10 @@ import { renderToString } from "react-dom/server";
 import { RouterContext, match } from "react-router";
 import { createLocation } from "history/lib/LocationUtils";
 import routes from "./src/js/routes";
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import * as reducers from './src/js/state/reducers';
 
 const compiler = webpack(webpackConfig);
 
@@ -44,7 +48,10 @@ app.use("/assets", express.static("./src/assets"));
 
 app.get("/", (req, res) => {
   const location = createLocation(req.url);
-  match({ routes, location }, (err, redirectLocation, renderProps) => {
+  const reducer = combineReducers(reducers);
+  const store = createStore(reducer, applyMiddleware(thunk));
+
+  match({ routes: routes(), location }, (err, redirectLocation, renderProps) => {
     if (err) {
       console.error(err);
       return res.status(500).end("Internal server error");
@@ -52,16 +59,26 @@ app.get("/", (req, res) => {
 
     if (!renderProps) return res.status(404).end("Not found.");
 
-    const InitialComponent = (<RouterContext {...renderProps} />);
+    const InitialComponent = (
+      <Provider store={ store }>
+        <RouterContext {...renderProps} />
+      </Provider>
+    );
 
+    const initialState = _.reduceKV((acc, k, v) => {
+      const reducerState = {};
+      reducerState[k] = _.toJs(v);
+      return Object.assign({}, acc, reducerState);
+    }, {}, _.toClj(store.getState()));
     const bodyHTML = renderToString(InitialComponent);
 
     return res.render("index", {
       title: "TEST",
-      styles: `
-<link href="${webpackConfig.output.path}main.css" media="all" rel="stylesheet" type="text/css"/>
+      styles: (process.env.NODE_ENV === "development") ? '' : `
+<link href="${webpackConfig.output.publicPath}main.css" media="all" rel="stylesheet" type="text/css"/>
       `,
       bodyHTML,
+      initialState: JSON.stringify(_.toJs(initialState)),
       scripts: `
 <script src="${webpackConfig.output.publicPath}${webpackConfig.output.filename}"></script>
       `

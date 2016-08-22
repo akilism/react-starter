@@ -6,3 +6,15 @@ export default ({ children, text = "some default text" }) =>
     <img src="/assets/test.jpg" alt="test" />
     { children }
   </div>;
+
+  //
+  // import React from "react";
+  //
+  // const Root = ({ children }) =>
+  //   <div>
+  //     { children }
+  //   </div>;
+  //
+  // Root.propTypes = { children: React.PropTypes.object };
+  //
+  // export default Root;

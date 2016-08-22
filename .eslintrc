@@ -16,7 +16,8 @@
     "no-console": 0,
     "no-alert": 0,
     "no-unused-vars": 2,
-    "arrow-body-style": 0
+    "arrow-body-style": 0,
+    "no-underscore-dangle": 1
   },
   "plugins": [ "react", "import" ],
   "settings": {
