@@ -46,6 +46,8 @@ app.set("view engine", ".hbs");
 app.use(express.static(webpackConfig.output.path));
 app.use("/assets", express.static("./src/assets"));
 
+// console.log('wpconfig:', webpackConfig);
+
 app.get("/", (req, res) => {
   const location = createLocation(req.url);
   const reducer = combineReducers(reducers);
@@ -75,7 +77,7 @@ app.get("/", (req, res) => {
     return res.render("index", {
       title: "TEST",
       styles: (process.env.NODE_ENV === "development") ? '' : `
-<link href="${webpackConfig.output.publicPath}main.css" media="all" rel="stylesheet" type="text/css"/>
+<link href="${webpackConfig.output.publicPath}bundle.css" media="all" rel="stylesheet" type="text/css"/>
       `,
       bodyHTML,
       initialState: JSON.stringify(_.toJs(initialState)),

@@ -37,7 +37,7 @@ function plugins(isProduction) {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     // new HtmlWebpackPlugin(htmlConfig),
-    new ExtractTextWebpackPlugin("dist/[name]-[contenthash].css")
+    new ExtractTextWebpackPlugin("bundle.css")
   ] :
   [
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -75,7 +75,7 @@ function output(isProduction) {
   {
     path: path.resolve(__dirname, "../dist"),
     publicPath: "/",
-    filename: "bundle.[chunkhash].js"
+    filename: "bundle.js"
   } :
   {
     path: path.resolve(__dirname, "../build"),
