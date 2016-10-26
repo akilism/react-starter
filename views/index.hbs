@@ -8,6 +8,9 @@
   </head>
   <body>
     <div id="app">{{{ bodyHTML }}}</div>
+    <script>
+      window.__INITIAL_STATE__ = {{{ initialState }}};
+    </script>
     {{{ scripts }}}
   </body>
 </html>
