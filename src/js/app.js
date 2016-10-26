@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import Router from "./routes";
 import * as reducers from './state/reducers';
 
-require("normalize.css");
+require("tachyons");
 require("../styles/main.scss");
 
 // For hot reloading.

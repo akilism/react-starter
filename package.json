@@ -1,10 +1,10 @@
 {
-  "name": "starter-template",
+  "name": "election-death",
   "version": "0.0.1",
   "description": "react, react router, express, babel, webpack, webpack dev, webpack hot, eslint, style-loader, sass-loader, react-helmet",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --config webpack/build-webpack.config.js",
+    "build": "NODE_ENV=production webpack --config webpack/webpack.config.js",
     "dev": "NODE_ENV=development node index.js",
     "start": "NODE_ENV=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +22,7 @@
     "express": "4.13.4",
     "express-handlebars": "3.0.0",
     "history": "3.0.0",
+    "moment": "^2.15.2",
     "mori": "0.3.2",
     "normalize.css": "4.1.1",
     "react": "15.0.1",
@@ -29,7 +30,8 @@
     "react-redux": "4.4.5",
     "react-router": "2.4.0",
     "redux": "3.5.2",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "tachyons": "^4.5.4"
   },
   "devDependencies": {
     "autoprefixer": "6.3.6",
