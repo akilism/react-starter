@@ -8,7 +8,7 @@ import Router from "./routes";
 import * as reducers from './state/reducers';
 
 require("tachyons");
-require("../styles/main.scss");
+require("../styles/main.css");
 
 // For hot reloading.
 if (module.hot) { module.hot.accept(); }

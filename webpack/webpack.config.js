@@ -58,18 +58,6 @@ function cssLoader(isProduction) {
   }
 }
 
-function sassLoader(isProduction) {
-  return (isProduction) ?
-  {
-    test: /\.scss$/,
-    loader: ExtractTextWebpackPlugin.extract("style-loader", "css-loader", "postcss-loader", "sass-loader")
-  } :
-  {
-    test: /\.scss$/,
-    loader: "style!css?sourceMap!postcss!sass?sourceMap"
-  }
-}
-
 function output(isProduction) {
   return (isProduction) ?
   {
@@ -108,7 +96,6 @@ module.exports = {
           loader: "babel"
         },
         cssLoader(isProduction),
-        sassLoader(isProduction),
         {
           test: /\.(geo)?json$/,
           loader: "json"
@@ -130,8 +117,5 @@ module.exports = {
         precss,
         postcssImport({ addDependencyTo: webpack })
       ];
-    },
-    sassLoader: {
-      includePaths: [path.resolve(__dirname, "../src/styles/")]
     }
   };
